@@ -1,8 +1,9 @@
 import React,{ useState } from 'react';
-import { StyleSheet, Text, View,Dimensions } from 'react-native';
+import { StyleSheet, Text, View,Dimensions,ScrollView } from 'react-native';
 import { theme, withGalio, GalioProvider } from 'galio-framework'
 import { Accordion, Block } from 'galio-framework';
 import { Icon } from 'galio-framework';
+import AccessContacts from '../AccessContacts/accessContacts';
 
 
 
@@ -21,11 +22,13 @@ const customTheme = {
 
 
 const TaskCard =({cardItem,key})=>{
+    const [assignedTo,setAssignedTo]=useState('');
     console.log('card',cardItem);
     const [isShow, setShow] = useState(false);
     const [removedItems,setRemovedItems] = useState([]);
     const data = [
         { title: `${cardItem.title}`, content: `${cardItem.description}`, 
+        
           icon: {
             name: 'delete-forever',
             family: 'material',
@@ -38,28 +41,34 @@ const TaskCard =({cardItem,key})=>{
         setRemovedItems(remove);
         console.info('You clicked the delete icon.');
     };
+    const assignTo=(value)=>{
+        console.log('assignedto',value)
+        setAssignedTo(value);
+    }
     const d= new Date();
       const date= d.getDay();
       console.log('date',date,'aefe',cardItem.from.getDay(),'sa',cardItem.to.getDay())
 
     return(
         
-        <View >
+        <ScrollView >
         
         {(removedItems.includes(key))? (<Text>ITEM REMOVED</Text>):(
+            <View>
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between',padding:4}}>
+            
         <Block style={{ height: (isShow)?(200):(60),paddingBottom:4, }}>
             <Accordion
             
             style={(cardItem.from.getDay() <= date && cardItem.to.getDay() >= date)?
-                {width:(Dimensions.get('window').width)/1.15,
+                {width:(Dimensions.get('window').width)/1.25,
              backgroundColor:'#15ff95'
             }:
             ((cardItem.from.getDay() > date)?
-            {width:(Dimensions.get('window').width)/1.15,
+            {width:(Dimensions.get('window').width)/1.25,
              backgroundColor:'#157fff'
             }
-            :{width:(Dimensions.get('window').width)/1.15,
+            :{width:(Dimensions.get('window').width)/1.25,
              backgroundColor:'#abb7b2'
             }
             )}
@@ -70,11 +79,25 @@ const TaskCard =({cardItem,key})=>{
                 </Accordion>
 
 
-
         </Block>
-        <Icon style={{marginTop:9}} onPress={handlePress} name="delete-forever" family="material"  color='#89aeb2' size={40} />
-        </View>)}
+        <AccessContacts assignTo={assignTo}/>
+        <Icon style={{marginTop:5}} onPress={handlePress} name="delete-forever" family="material"  color='#89aeb2' size={45} />
         </View>
+        {(assignedTo !=='')?(<Text style={{
+            marginTop:-15,
+            marginLeft:10,
+            paddingLeft:10,
+            borderBottomWidth:10,
+            borderBottomColor:'#ebe9e9',
+            backgroundColor:'#b28dff',
+            width:(Dimensions.get('window').width)/1.3,
+            borderRadius:50
+            }}>
+        
+            Assigned To = {assignedTo}</Text>):(null)}
+        </View>)}
+        
+        </ScrollView>
 
     );
 }

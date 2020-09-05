@@ -8,7 +8,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 
-
 class AppBar extends React.Component{
     constructor(){
         super();
